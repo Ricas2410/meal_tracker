@@ -13,7 +13,7 @@ SECRET_KEY = 'django-insecure-lvoz=^+q5wqk)e-uq&@!p#wva@uyty$h3z^m(x-6(p)=9fy6e9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['meal-tracker-vzgy.onrender.com']
+ALLOWED_HOSTS = ['meal-tracker-vzgy.onrender.com', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
