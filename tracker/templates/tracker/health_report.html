@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Health Report</h1>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">Average Daily Calories</div>
+                <div class="card-body">
+                    <h2>{{ avg_calories|floatformat:0 }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">Average Weight</div>
+                <div class="card-body">
+                    <h2>{{ avg_weight|floatformat:1 }} kg</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">Average Blood Pressure</div>
+                <div class="card-body">
+                    <h2>{{ avg_blood_pressure }} mmHg</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <canvas id="caloriesChart"></canvas>
+        </div>
+        <div class="col-md-6">
+            <canvas id="weightChart"></canvas>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <canvas id="bloodPressureChart"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+<script>
+    const dailyCalories = {{ daily_calories|safe }};
+    const weightTrend = {{ weight_trend|safe }};
+    const bloodPressure = {{ blood_pressure|safe }};
+    
+    new Chart(document.getElementById('caloriesChart'), {
+        type: 'line',
+        data: {
+            labels: dailyCalories.map(d => d.date),
+            datasets: [{
+                label: 'Daily Calories',
+                data: dailyCalories.map(d => d.calories),
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Daily Calorie Intake'
+                }
+            }
+        }
+    });
+    
+    new Chart(document.getElementById('weightChart'), {
+        type: 'line',
+        data: {
+            labels: weightTrend.map(d => d.date),
+            datasets: [{
+                label: 'Weight (kg)',
+                data: weightTrend.map(d => d.weight),
+                borderColor: 'rgb(255, 99, 132)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Weight Trend'
+                }
+            }
+        }
+    });
+    
+    new Chart(document.getElementById('bloodPressureChart'), {
+        type: 'line',
+        data: {
+            labels: bloodPressure.map(d => d.date),
+            datasets: [{
+                label: 'Systolic',
+                data: bloodPressure.map(d => d.systolic),
+                borderColor: 'rgb(255, 99, 132)',
+                tension: 0.1
+            }, {
+                label: 'Diastolic',
+                data: bloodPressure.map(d => d.diastolic),
+                borderColor: 'rgb(54, 162, 235)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Blood Pressure Trend'
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

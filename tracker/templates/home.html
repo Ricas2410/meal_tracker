@@ -1,0 +1,221 @@
+<!-- templates/home.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Welcome to HealthTrack{% endblock %}
+
+{% block extra_css %}
+<style>
+    .jumbotron {
+        background-image: url('https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        padding: 4rem 2rem;
+    }
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+    .health-tip {
+        background-color: #e9ecef;
+        border-left: 5px solid #007bff;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    .card {
+        height: 100%;
+    }
+    .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron text-center">
+    <h1 class="display-4">Welcome to HealthTrack</h1>
+    <p class="lead">Your personal health companion for tracking meals, symptoms, and overall well-being.</p>
+    <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Get Started</a>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="card-img-top" alt="Healthy Food">
+                <div class="card-body">
+                    <h5 class="card-title">Track Your Meals</h5>
+                    <p class="card-text">Log your daily meals and get insights into your nutritional intake.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="card-img-top" alt="Symptoms">
+                <div class="card-body">
+                    <h5 class="card-title">Monitor Symptoms</h5>
+                    <p class="card-text">Keep track of any symptoms and identify potential triggers.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="card-img-top" alt="Health Report">
+                <div class="card-body">
+                    <h5 class="card-title">Personalized Reports</h5>
+                    <p class="card-text">Get detailed health reports and personalized recommendations.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="mt-5 mb-4">Health Tips</h2>
+    <div class="health-tip">
+        <h4>Stay Hydrated</h4>
+        <p>Drink at least 8 glasses of water a day to maintain proper hydration and support bodily functions.</p>
+    </div>
+    <div class="health-tip">
+        <h4>Get Enough Sleep</h4>
+        <p>Aim for 7-9 hours of sleep per night to support physical and mental health.</p>
+    </div>
+
+    <h2 class="mt-5 mb-4">Nutritional Guidelines</h2>
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <h4>Daily Recommended Intake</h4>
+            <ul>
+                <li>Calories: 2000-2500 (varies by individual)</li>
+                <li>Protein: 50-60 grams</li>
+                <li>Carbohydrates: 225-325 grams</li>
+                <li>Fiber: 25-30 grams</li>
+                <li>Fat: 44-78 grams</li>
+            </ul>
+        </div>
+        <div class="col-md-6 mb-4">
+            <h4>Key Vitamins and Minerals</h4>
+            <ul>
+                <li>Vitamin C: 65-90 mg</li>
+                <li>Vitamin D: 600-800 IU</li>
+                <li>Calcium: 1000-1200 mg</li>
+                <li>Iron: 8-18 mg</li>
+                <li>Potassium: 3500-4700 mg</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2 class="mt-5 mb-4">Common Health Conditions</h2>
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Hypertension (High Blood Pressure)</h5>
+                    <p class="card-text">Maintain a healthy diet low in sodium, exercise regularly, and manage stress to help control blood pressure.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Type 2 Diabetes</h5>
+                    <p class="card-text">Monitor blood sugar levels, maintain a balanced diet, and stay physically active to manage diabetes effectively.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Heart Disease</h5>
+                    <p class="card-text">Adopt a heart-healthy lifestyle with a balanced diet, regular exercise, and stress management techniques.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Chronic Kidney Disease</h5>
+                    <p class="card-text">Control blood pressure, manage diabetes if present, and follow a kidney-friendly diet as recommended by your doctor.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="mt-5 mb-4">Understanding Your Health Metrics</h2>
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="card-img-top" alt="Blood Pressure">
+                <div class="card-body">
+                    <h5 class="card-title">Blood Pressure</h5>
+                    <p class="card-text">Normal: Below 120/80 mmHg<br>
+                    Elevated: 120-129/&lt;80 mmHg<br>
+                    High: 130/80 mmHg or higher</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="card-img-top" alt="Body Mass Index">
+                <div class="card-body">
+                    <h5 class="card-title">Body Mass Index (BMI)</h5>
+                    <p class="card-text">Underweight: Below 18.5<br>
+                    Normal weight: 18.5-24.9<br>
+                    Overweight: 25-29.9<br>
+                    Obese: 30 or higher</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="mt-5 mb-4">Healthy Lifestyle Tips</h2>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Regular Exercise</h5>
+                    <p class="card-text">Aim for at least 150 minutes of moderate-intensity aerobic activity or 75 minutes of vigorous-intensity aerobic activity per week.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Balanced Diet</h5>
+                    <p class="card-text">Include a variety of fruits, vegetables, whole grains, lean proteins, and healthy fats in your daily meals.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Stress Management</h5>
+                    <p class="card-text">Practice relaxation techniques such as deep breathing, meditation, or yoga to reduce stress and improve overall well-being.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="mt-5 mb-4">Stay Informed</h2>
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <h4>Latest Health News</h4>
+            <ul class="list-group">
+                <li class="list-group-item">New study shows benefits of Mediterranean diet</li>
+                <li class="list-group-item">Importance of mental health awareness</li>
+                <li class="list-group-item">Advances in telemedicine and remote healthcare</li>
+            </ul>
+        </div>
+        <div class="col-md-6 mb-4">
+            <h4>Upcoming Health Events</h4>
+            <ul class="list-group">
+                <li class="list-group-item">World Health Day - April 7</li>
+                <li class="list-group-item">Mental Health Awareness Month - May</li>
+                <li class="list-group-item">World Heart Day - September 29</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

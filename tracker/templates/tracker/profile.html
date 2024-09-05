@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% load static %}
+{% load countries %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        background-image: url('https://images.unsplash.com/photo-1506784365847-bbad939e9335');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 60px 0;
+        text-align: center;
+        border-radius: 10px;
+    }
+    .form-container {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .form-container h3 {
+        color: #007bff;
+        margin-bottom: 15px;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    .form-control, .form-control-sm {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        background-color: white;
+    }
+    .form-control-sm {
+        font-size: 14px;
+    }
+    .form-control-select {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px; /* Adjust font size to fit text */
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        height: auto;
+    }
+    .readonly-field {
+        background-color: #e9ecef;
+        cursor: not-allowed;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        margin-top: 20px;
+        padding: 10px 20px;
+    }
+    @media (max-width: 767px) {
+        .form-group .form-control {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="page-header">
+        <h1>{{ user.username }}'s Profile</h1>
+    </div>
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Account Information Section -->
+        <div class="form-container">
+            <h3>Account Information</h3>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" class="form-control readonly-field" value="{{ user.username }}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" class="form-control readonly-field" value="{{ user.email }}" readonly>
+            </div>
+        </div>
+
+        <!-- Personal Information Section -->
+        <div class="form-container">
+            <h3>Personal Information</h3>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="{{ profile_form.full_name.id_for_label }}">Full Name</label>
+                        <input type="text" class="form-control" id="{{ profile_form.full_name.id_for_label }}" name="{{ profile_form.full_name.html_name }}" value="{{ profile_form.full_name.value }}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="{{ profile_form.phone_number.id_for_label }}">Phone Number</label>
+                        <input type="text" class="form-control" id="{{ profile_form.phone_number.id_for_label }}" name="{{ profile_form.phone_number.html_name }}" value="{{ profile_form.phone_number.value }}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="{{ profile_form.country.id_for_label }}">Country</label>
+                        <select class="form-control form-control-select" id="{{ profile_form.country.id_for_label }}" name="{{ profile_form.country.html_name }}">
+                            {% for code, name in profile_form.country.field.choices %}
+                                <option value="{{ code }}" {% if code == profile_form.country.value %}selected{% endif %}>{{ name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Health Information Section -->
+        <div class="form-container">
+            <h3>Health Information</h3>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="{{ profile_form.weight.id_for_label }}">Weight (kg)</label>
+                        <input type="number" class="form-control" id="{{ profile_form.weight.id_for_label }}" name="{{ profile_form.weight.html_name }}" value="{{ profile_form.weight.value }}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="{{ profile_form.height.id_for_label }}">Height (cm)</label>
+                        <input type="number" class="form-control" id="{{ profile_form.height.id_for_label }}" name="{{ profile_form.height.html_name }}" value="{{ profile_form.height.value }}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="{{ profile_form.dietary_preferences.id_for_label }}">Dietary Preferences</label>
+                        <input type="text" class="form-control" id="{{ profile_form.dietary_preferences.id_for_label }}" name="{{ profile_form.dietary_preferences.html_name }}" value="{{ profile_form.dietary_preferences.value }}">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ profile_form.known_allergies.id_for_label }}">Known Allergies</label>
+                        <textarea class="form-control form-control-sm" id="{{ profile_form.known_allergies.id_for_label }}" name="{{ profile_form.known_allergies.html_name }}">{{ profile_form.known_allergies.value }}</textarea>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ profile_form.health_conditions.id_for_label }}">Health Conditions</label>
+                        <textarea class="form-control form-control-sm" id="{{ profile_form.health_conditions.id_for_label }}" name="{{ profile_form.health_conditions.html_name }}">{{ profile_form.health_conditions.value }}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nutritional Goals Section -->
+        <div class="form-container">
+            <h3>Nutritional Goals</h3>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="{{ profile_form.daily_calorie_goal.id_for_label }}">Daily Calorie Goal</label>
+                        <input type="number" class="form-control" id="{{ profile_form.daily_calorie_goal.id_for_label }}" name="{{ profile_form.daily_calorie_goal.html_name }}" value="{{ profile_form.daily_calorie_goal.value }}">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="{{ profile_form.daily_protein_goal.id_for_label }}">Daily Protein Goal (g)</label>
+                        <input type="number" class="form-control" id="{{ profile_form.daily_protein_goal.id_for_label }}" name="{{ profile_form.daily_protein_goal.html_name }}" value="{{ profile_form.daily_protein_goal.value }}">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="{{ profile_form.daily_carbs_goal.id_for_label }}">Daily Carbs Goal (g)</label>
+                        <input type="number" class="form-control" id="{{ profile_form.daily_carbs_goal.id_for_label }}" name="{{ profile_form.daily_carbs_goal.html_name }}" value="{{ profile_form.daily_carbs_goal.value }}">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="{{ profile_form.daily_fat_goal.id_for_label }}">Daily Fat Goal (g)</label>
+                        <input type="number" class="form-control" id="{{ profile_form.daily_fat_goal.id_for_label }}" name="{{ profile_form.daily_fat_goal.html_name }}" value="{{ profile_form.daily_fat_goal.value }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
+{% endblock %}

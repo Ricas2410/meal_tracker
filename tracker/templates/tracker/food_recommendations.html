@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .recommendation-card {
+        transition: transform 0.3s;
+    }
+    .recommendation-card:hover {
+        transform: translateY(-5px);
+    }
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Food Recommendations</h1>
+    
+    {% if recommendations %}
+        <div class="row">
+            {% for recommendation in recommendations %}
+                <div class="col-md-4 mb-4">
+                    <div class="card recommendation-card">
+                        <img src="{{ recommendation.image_url|default:'https://via.placeholder.com/300x200?text=Healthy+Food' }}" class="card-img-top" alt="{{ recommendation.recommendation }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ recommendation.recommendation }}</h5>
+                            <p class="card-text">{{ recommendation.description }}</p>
+                            <p class="card-text">
+                                <small class="text-muted">Benefits:</small>
+                                <ul class="list-unstyled">
+                                    {% for benefit in recommendation.benefits %}
+                                        <li><i class="fas fa-check-circle text-success"></i> {{ benefit }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </p>
+                            <p class="card-text"><small class="text-muted">Generated on: {{ recommendation.created_at|date:"F d, Y" }}</small></p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <h4 class="alert-heading">No recommendations available yet</h4>
+            <p>Keep logging your meals and symptoms for personalized recommendations!</p>
+            <hr>
+            <p class="mb-0">In the meantime, here are some general healthy eating tips:</p>
+            <ul>
+                <li>Eat a variety of colorful fruits and vegetables</li>
+                <li>Choose whole grains over refined grains</li>
+                <li>Include lean proteins in your diet</li>
+                <li>Limit processed foods and added sugars</li>
+                <li>Stay hydrated by drinking plenty of water</li>
+            </ul>
+        </div>
+    {% endif %}
+
+    <div class="mt-5">
+        <h2>General Nutrition Tips</h2>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="card-img-top" alt="Balanced Diet">
+                    <div class="card-body">
+                        <h5 class="card-title">Balanced Diet</h5>
+                        <p class="card-text">A balanced diet includes a variety of foods from all food groups: fruits, vegetables, grains, proteins, and dairy. This ensures you get all the necessary nutrients for optimal health.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <img src="https://images.unsplash.com/photo-1495214783159-3503fd1b572d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="card-img-top" alt="Portion Control">
+                    <div class="card-body">
+                        <h5 class="card-title">Portion Control</h5>
+                        <p class="card-text">Pay attention to portion sizes to maintain a healthy calorie intake. Use smaller plates, measure your food, and listen to your body's hunger and fullness cues.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

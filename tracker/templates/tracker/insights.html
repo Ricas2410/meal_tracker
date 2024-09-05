@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .insight-card {
+        transition: transform 0.3s ease-in-out;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .insight-card:hover {
+        transform: translateY(-5px);
+    }
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+        border-bottom: none;
+    }
+    .card-body {
+        border-radius: 0 0 15px 15px;
+    }
+    .bg-gradient-primary {
+        background: linear-gradient(45deg, #007bff, #00bcd4);
+    }
+    .bg-gradient-success {
+        background: linear-gradient(45deg, #28a745, #9ccc65);
+    }
+    .bg-gradient-danger {
+        background: linear-gradient(45deg, #dc3545, #ff5722);
+    }
+    .bg-gradient-info {
+        background: linear-gradient(45deg, #17a2b8, #4dd0e1);
+    }
+    .text-white {
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-5">Insights and Trends</h1>
+
+    <!-- Analysis Summary Section -->
+    <div class="row mb-5">
+        <div class="col-md-6 mx-auto">
+            <div class="card insight-card">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h2 class="mb-0">Analysis Summary</h2>
+                </div>
+                <div class="card-body">
+                    <p><strong>Analysis period:</strong> {{ analytics.date_range.start|date:"M d, Y" }} to {{ analytics.date_range.end|date:"M d, Y" }}</p>
+                    <p><strong>Total Meals Logged:</strong> {{ analytics.total_meals }}</p>
+                    <p><strong>Total Symptoms Recorded:</strong> {{ analytics.total_symptoms }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Meal Analysis Section -->
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <div class="card insight-card h-100">
+                <div class="card-header bg-gradient-success text-white">
+                    <h2 class="mb-0">Meal Analysis</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Meal Counts by Type</h3>
+                    <ul class="list-group list-group-flush">
+                        {% for meal in analytics.meal_counts %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ meal.meal_type }}
+                                <span class="badge bg-primary rounded-pill">{{ meal.count }}</span>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item">No meal data available.</li>
+                        {% endfor %}
+                    </ul>
+
+                    <h3 class="mt-4">Most Common Ingredients</h3>
+                    <ol class="list-group list-group-numbered">
+                        {% for ingredient, count in analytics.common_ingredients %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ ingredient }}
+                                <span class="badge bg-success rounded-pill">{{ count }} times</span>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item">No ingredient data available.</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Symptom Analysis Section -->
+        <div class="col-md-6">
+            <div class="card insight-card h-100">
+                <div class="card-header bg-gradient-danger text-white">
+                    <h2 class="mb-0">Symptom Analysis</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Symptom Counts</h3>
+                    <ul class="list-group list-group-flush">
+                        {% for symptom in analytics.symptom_counts %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ symptom.description }}
+                                <span class="badge bg-danger rounded-pill">{{ symptom.count }}</span>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item">No symptom data available.</li>
+                        {% endfor %}
+                    </ul>
+
+                    <h3 class="mt-4">Symptom Severity Distribution</h3>
+                    <ul class="list-group list-group-flush">
+                        {% for severity in analytics.symptom_severity %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Severity {{ severity.severity }}
+                                <span class="badge bg-warning rounded-pill">{{ severity.count }}</span>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item">No severity data available.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Potential Correlations Section -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="card insight-card">
+                <div class="card-header bg-gradient-info text-white">
+                    <h2 class="mb-0">Potential Correlations</h2>
+                </div>
+                <div class="card-body">
+                    {% for symptom, ingredients in analytics.correlations.items %}
+                        <h3>{{ symptom }}</h3>
+                        <ul class="list-group mb-3">
+                            {% for ingredient, count in ingredients.items %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ ingredient }}
+                                    <span class="badge bg-info rounded-pill">{{ count }} times</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% empty %}
+                        <p class="text-muted">No significant correlations found.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Analysis Period Section -->
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card insight-card">
+                <div class="card-header bg-gradient-primary text-white">
+        <div class="col-md-12">
+            <div class="card border-secondary">
+                <div class="card-header bg-secondary text-white">
+                    <h2>Change Analysis Period</h2>
+                </div>
+                <div class="card-body">
+                    <form method="get" action="{% url 'insights' %}" class="form-inline">
+                        <div class="form-group mr-2">
+                            <label for="days" class="mr-2">Analysis period (days):</label>
+                            <input type="number" id="days" name="days" value="{{ days }}" min="1" max="365" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

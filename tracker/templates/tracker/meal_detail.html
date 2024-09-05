@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">{{ meal.meal_type }} - {{ meal.date_time }}</h1>
+    <p><strong>Ingredients:</strong> {{ meal.ingredients }}</p>
+    <p><strong>Portion Size:</strong> {{ meal.portion_size }}</p>
+    <p><strong>Notes:</strong> {{ meal.notes }}</p>
+    {% if meal.nutritional_insights %}
+        <h3>Nutritional Insights</h3>
+        <ul>
+            {% for ingredient, data in meal.nutritional_insights.items %}
+                <li>{{ ingredient }}: {{ data.calories }} calories, {{ data.fat }}g fat, {{ data.protein }}g protein, {{ data.carbs }}g carbs</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+{% endblock %}

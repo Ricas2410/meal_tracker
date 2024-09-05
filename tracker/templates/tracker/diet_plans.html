@@ -1,0 +1,155 @@
+<!-- tracker/templates/tracker/diet_plans.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .diet-plan-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+    }
+    .diet-plan-card:hover {
+        transform: translateY(-5px);
+    }
+    .meal-type-header {
+        background: linear-gradient(45deg, #007bff, #00bcd4);
+        color: white;
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+    .food-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .food-icon {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+    }
+    .nutrition-tip {
+        background-color: #e9ecef;
+        border-left: 5px solid #28a745;
+        padding: 15px;
+        margin-top: 20px;
+        border-radius: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-5">Your Personalized Diet Plan</h1>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card diet-plan-card">
+                <div class="card-body">
+                    <h2 class="card-title">Plan for {{ diet_plan.plan_date|date:"F d, Y" }}</h2>
+                    
+                    {% for meal_type, foods in diet_plan.meals.items %}
+                        <div class="meal-type-header mt-4">
+                            <h3 class="mb-0">{{ meal_type|title }}</h3>
+                        </div>
+                        <ul class="list-unstyled">
+                            {% for food in foods %}
+                                <li class="food-item">
+                                    <img src="{% static 'images/food-icons/'|add:food|lower|add:'.png' %}" alt="{{ food }}" class="food-icon">
+                                    {{ food }}
+                                </li>
+                            {% empty %}
+                                <li>No foods planned for this meal.</li>
+                            {% endfor %}
+                        </ul>
+                    {% endfor %}
+                    
+                    {% if diet_plan.notes %}
+                        <div class="nutrition-tip">
+                            <h4>Nutritionist's Notes:</h4>
+                            <p>{{ diet_plan.notes }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card diet-plan-card">
+                <div class="card-body">
+                    <h3 class="card-title">Nutrition Tips</h3>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Stay hydrated! Aim for 8 glasses of water daily.</li>
+                        <li class="list-group-item">Include a variety of colorful fruits and vegetables in your meals.</li>
+                        <li class="list-group-item">Choose whole grains over refined grains for added fiber and nutrients.</li>
+                        <li class="list-group-item">Limit processed foods and added sugars.</li>
+                        <li class="list-group-item">Practice mindful eating and listen to your body's hunger cues.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card diet-plan-card mt-4">
+                <img src="{% static 'images/healthy-plate.jpg' %}" class="card-img-top" alt="Healthy Plate">
+                <div class="card-body">
+                    <h4 class="card-title">The Healthy Plate Model</h4>
+                    <p class="card-text">Fill half your plate with vegetables, a quarter with lean proteins, and a quarter with whole grains for a balanced meal.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card diet-plan-card">
+                <div class="card-body">
+                    <h3 class="card-title">Weekly Overview</h3>
+                    <p>Here's a snapshot of your nutritional intake for the week:</p>
+                    <canvas id="weeklyNutritionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Weekly Nutrition Chart
+    var ctx = document.getElementById('weeklyNutritionChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+            datasets: [{
+                label: 'Calories',
+                data: [2000, 1800, 2200, 1900, 2100, 2300, 2000],
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }, {
+                label: 'Protein (g)',
+                data: [75, 80, 70, 85, 75, 90, 80],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }, {
+                label: 'Carbs (g)',
+                data: [250, 220, 270, 230, 260, 280, 240],
+                backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                borderColor: 'rgba(255, 206, 86, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

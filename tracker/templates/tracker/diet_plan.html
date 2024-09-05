@@ -1,0 +1,132 @@
+<!-- tracker/templates/tracker/diet_plans.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .diet-plan-header {
+        background: linear-gradient(45deg, #28a745, #9ccc65);
+        color: white;
+        padding: 3rem 0;
+        border-radius: 0 0 50% 50% / 20px;
+    }
+    .meal-card {
+        transition: transform 0.3s ease-in-out;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+    .meal-card:hover {
+        transform: translateY(-5px);
+    }
+    .meal-type {
+        font-weight: bold;
+        color: #28a745;
+    }
+    .nutrition-info {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    .tip-card {
+        background-color: #f8f9fa;
+        border-left: 5px solid #28a745;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    .safe-ingredients {
+        background-color: #e9ecef;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .img-fluid {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="diet-plan-header text-center">
+    <h1 class="display-4">Your Personalized Diet Plan</h1>
+    <p class="lead">Tailored to your nutritional needs and preferences</p>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            <h2 class="mb-4">Weekly Meal Plan</h2>
+            {% for day in meal_plan %}
+                <div class="card meal-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Day {{ forloop.counter }}</h3>
+                    </div>
+                    <div class="card-body">
+                        {% for meal in day %}
+                            <h4 class="meal-type">{{ meal.type }}</h4>
+                            <p>{{ meal.description }}</p>
+                            <p class="nutrition-info">
+                                Calories: {{ meal.calories }} | 
+                                Protein: {{ meal.protein }}g | 
+                                Carbs: {{ meal.carbs }}g | 
+                                Fat: {{ meal.fat }}g
+                            </p>
+                            {% if not forloop.last %}<hr>{% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="col-md-4">
+            <div class="safe-ingredients">
+                <h4>Safe Ingredients</h4>
+                <p>These ingredients seem to be well-tolerated based on your meal and symptom history:</p>
+                <ul>
+                    {% for ingredient in safe_ingredients %}
+                        <li>{{ ingredient }}</li>
+                    {% empty %}
+                        <li>No safe ingredients identified yet. Keep logging your meals and symptoms!</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="tip-card">
+                <h4>Nutrition Tip of the Day</h4>
+                <p>Eating a variety of colorful fruits and vegetables ensures you get a wide range of vitamins, minerals, and antioxidants.</p>
+            </div>
+
+            <div class="tip-card">
+                <h4>Hydration Reminder</h4>
+                <p>Don't forget to drink at least 8 glasses of water throughout the day to stay properly hydrated!</p>
+            </div>
+
+            <img src="https://th.bing.com/th/id/OIP.kkrGlR7YmdY__UKZryZp2QHaFp?rs=1&pid=ImgDetMain" alt="Healthy Plate" class="img-fluid rounded mb-4">
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h2>Professional Guidance</h2>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Tips for Success</h5>
+                    <ul>
+                        <li>Prepare meals in advance to save time and ensure you stick to your plan.</li>
+                        <li>Listen to your body's hunger and fullness cues.</li>
+                        <li>Don't skip meals, especially breakfast.</li>
+                        <li>Include a source of protein with each meal to help maintain satiety.</li>
+                        <li>Experiment with herbs and spices to add flavor without extra calories.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-info mt-5">
+        <h4 class="alert-heading">Disclaimer</h4>
+        <p>This meal plan is generated based on your historical data and should be used as a general guide only. Always consult with a healthcare professional or registered dietitian before making significant changes to your diet.</p>
+    </div>
+</div>
+{% endblock %}

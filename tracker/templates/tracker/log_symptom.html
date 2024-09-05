@@ -1,0 +1,103 @@
+<!-- tracker/templates/tracker/log_symptom.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.9/flatpickr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.9/flatpickr.min.js"></script>
+<style>
+    .transparent-card {
+        background-color: transparent;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+    }
+    .transparent-form-control {
+        background-color: transparent;
+        border: 1px solid #ced4da;
+    }
+    .transparent-form-control:focus {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Log Symptom</h1>
+    <div class="card transparent-card">
+        <div class="card-body">
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        Please correct the errors below.
+                    </div>
+                {% endif %}
+                <div class="form-group mb-3">
+                    <label for="{{ form.date_time.id_for_label }}">Date and Time:</label>
+                    {{ form.date_time }}
+                    {% if form.date_time.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.date_time.errors|join:", " }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group mb-3">
+                    <label for="{{ form.description.id_for_label }}">Description:</label>
+                    <textarea name="{{ form.description.name }}" id="{{ form.description.id_for_label }}" 
+                              class="form-control transparent-form-control" rows="3" required></textarea>
+                    {% if form.description.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.description.errors|join:", " }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group mb-3">
+                    <label for="{{ form.severity.id_for_label }}">Severity:</label>
+                    <select name="{{ form.severity.name }}" id="{{ form.severity.id_for_label }}" 
+                            class="form-control transparent-form-control" required>
+                        <option value="">Select severity</option>
+                        {% for value, label in form.severity.field.choices %}
+                            <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    {% if form.severity.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.severity.errors|join:", " }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var dateTimeInput = document.getElementById('{{ form.date_time.id_for_label }}');
+        
+        function formatDateTime() {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = (now.getMonth() + 1).toString().padStart(2, '0');
+            var day = now.getDate().toString().padStart(2, '0');
+            var hours = now.getHours().toString().padStart(2, '0');
+            var minutes = now.getMinutes().toString().padStart(2, '0');
+            
+            return `${year}-${month}-${day}-${hours}:${minutes}`;
+        }
+        
+        dateTimeInput.value = formatDateTime();
+        
+        setInterval(function() {
+            dateTimeInput.value = formatDateTime();
+        }, 60000); // Update every minute
+    });
+</script>
+{% endblock %}
+

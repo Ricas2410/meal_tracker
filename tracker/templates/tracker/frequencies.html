@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+    .chart-container {
+        position: relative;
+        height: 40vh;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Meal and Symptom Frequencies</h1>
+
+    <!-- Date Range Filter -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Filter Data</h5>
+            <form method="get" class="date-range-filter">
+                <div class="form-row">
+                    <div class="col-md-4 mb-3">
+                        <label for="start_date">Start Date</label>
+                        <input type="text" class="form-control datepicker" id="start_date" name="start_date" value="{{ start_date|date:'Y-m-d' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="end_date">End Date</label>
+                        <input type="text" class="form-control datepicker" id="end_date" name="end_date" value="{{ end_date|date:'Y-m-d' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="d-block">&nbsp;</label>
+                        <button type="submit" class="btn btn-primary">Apply Filter</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Existing charts -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Meal Frequency (Existing)</h5>
+                    <div class="chart-container">
+                        <canvas id="mealChartExisting"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Symptom Frequency (Existing)</h5>
+                    <div class="chart-container">
+                        <canvas id="symptomChartExisting"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New charts -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Meal Frequency (New)</h5>
+                    <div class="chart-container">
+                        <canvas id="mealChartNew"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Symptom Frequency (New)</h5>
+                    <div class="chart-container">
+                        <canvas id="symptomChartNew"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr(".datepicker", {
+            dateFormat: "Y-m-d",
+        });
+
+        const mealChartData = JSON.parse('{{ meal_chart_data|safe }}');
+        const symptomChartData = JSON.parse('{{ symptom_chart_data|safe }}');
+
+        // Meal Chart
+        const mealCtx = document.getElementById('mealChartNew').getContext('2d');
+        new Chart(mealCtx, {
+            type: 'line',
+            data: {
+                labels: mealChartData.map(item => item.date),
+                datasets: [{
+                    label: 'Number of Meals',
+                    data: mealChartData.map(item => item.count),
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+
+        // Symptom Chart
+        const symptomCtx = document.getElementById('symptomChartNew').getContext('2d');
+        new Chart(symptomCtx, {
+            type: 'line',
+            data: {
+                labels: symptomChartData.map(item => item.date),
+                datasets: [{
+                    label: 'Number of Symptoms',
+                    data: symptomChartData.map(item => item.count),
+                    borderColor: 'rgb(255, 99, 132)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

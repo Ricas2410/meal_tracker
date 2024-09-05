@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css">
+<style>
+    .summary-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+    }
+    .summary-card:hover {
+        transform: translateY(-5px);
+    }
+    .summary-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    .chart-container {
+        position: relative;
+        height: 300px;
+        width: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Data Summary</h1>
+    <p class="lead">Summary for the period: {{ start_date|date:"F d, Y" }} to {{ end_date|date:"F d, Y" }}</p>
+
+    <div class="row mb-4">
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card summary-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-utensils summary-icon text-primary"></i>
+                    <h5 class="card-title">Total Meals</h5>
+                    <p class="card-text display-4">{{ meal_summary.total }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card summary-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-calendar-day summary-icon text-success"></i>
+                    <h5 class="card-title">Avg. Meals/Day</h5>
+                    <p class="card-text display-4">{{ meal_summary.avg_per_day|floatformat:1 }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card summary-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-heartbeat summary-icon text-danger"></i>
+                    <h5 class="card-title">Total Symptoms</h5>
+                    <p class="card-text display-4">{{ symptom_summary.total }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2>Meal Summary</h2>
+        </div>
+        <div class="card-body">
+            <p>Total meals logged: {{ meal_summary.total }}</p>
+            <p>Average meals per day: {{ meal_summary.avg_per_day|floatformat:1 }}</p>
+            {% if meal_summary.most_common_type %}
+                <p>Most common meal type: {{ meal_summary.most_common_type.meal_type }} ({{ meal_summary.most_common_type.count }} times)</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2>Symptom Summary</h2>
+        </div>
+        <div class="card-body">
+            <p>Total symptoms logged: {{ symptom_summary.total }}</p>
+            <p>Average symptoms per day: {{ symptom_summary.avg_per_day|floatformat:1 }}</p>
+            <p>Average symptom severity: {{ symptom_summary.avg_severity|floatformat:1 }} / 10</p>
+            {% if symptom_summary.most_common %}
+                <p>Most common symptom: {{ symptom_summary.most_common.description }} ({{ symptom_summary.most_common.count }} times)</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <a href="{% url 'dashboard' %}" class="btn btn-primary">Back to Dashboard</a>
+</div>
+{% endblock %}
